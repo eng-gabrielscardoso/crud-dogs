@@ -1,5 +1,8 @@
+import * as dotenv from 'dotenv-safe';
 import { resolve as resolvePath } from 'node:path';
 import { defineConfig } from 'vitest/config';
+
+dotenv.config();
 
 export default defineConfig({
   resolve: {
@@ -10,7 +13,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    globalSetup: './test-setup.ts',
+    /**
+     * I needed to comment out this line for the tests to run without the need for this file
+     */
+    globalSetup:
+      process.env.MODE === 'development' ? undefined : './test-setup.ts',
     reporters: process.env.GITHUB_ACTIONS
       ? ['default', 'junit', 'github-actions']
       : ['default'],
